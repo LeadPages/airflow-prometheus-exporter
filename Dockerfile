@@ -1,4 +1,9 @@
-FROM scratch
+FROM golang:1.8
 
-COPY ./airflow-prometheus-exporter /airflow-prometheus-exporter
-ENTRYPOINT ["/airflow-prometheus-exporter"]
+WORKDIR /go/src/app
+COPY . .
+RUN go get -d -v ./...
+RUN go install -v ./...
+RUN go build -o airflow-prometheus-exporter .
+
+ENTRYPOINT ["/go/src/app/airflow-prometheus-exporter"]
